@@ -1,10 +1,21 @@
 import React from "react";
+import Greeting from "./components/Greeting";
+import Counter from "./components/Counter";
+import TodoList from "./components/TodoList";
+// @ts-ignore: allow side-effect CSS import without type declarations
+import "./styles/app.css";
 
 const App: React.FC = () => {
   return (
-    <div>
-      <h1>Jai Shree Ram</h1>
-      <p>Everything works perfectly!</p>
+    <div className="app-container">
+      <h1>Todo List</h1>
+
+      <div className="card">
+        <Greeting name="World" />
+        <Counter />
+      </div>
+
+      <TodoList />
     </div>
   );
 };

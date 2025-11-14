@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Todo } from "../types/Todo";
 import TodoItem from "./TodoItem";
+// @ts-ignore: allow side-effect CSS import without type declarations
+import "../styles/app.css";
 
 function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([
@@ -18,7 +20,7 @@ function TodoList() {
     <div className="card">
       <h3>Todo List</h3>
 
-      <ul>
+      <ul className="todo-list">
         {todos.map((todo) => (
           <TodoItem key={todo.id} todo={todo} onToggle={toggleTodo} />
         ))}
