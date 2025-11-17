@@ -11,7 +11,7 @@ const App: React.FC = () => {
       <h1>Todo List</h1>
 
       <div className="card">
-        <Greeting name="World" />
+        <Greeting />
         <Counter />
       </div>
 
