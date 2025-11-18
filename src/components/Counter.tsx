@@ -1,35 +1,77 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const Counter: React.FC = () => {
   const [count, setCount] = useState(0);
   const [auto, setAuto] = useState(false);
 
-  // ⭐ Effect 1 — update document title when count changes
+  const [step, setStep] = useState(1); // dynamic step size
+  const fetchIdRef = useRef(0); // helps prevent race conditions
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  const [tooWide, setTooWide] = useState(false);
+
+  // ⭐ Simulated API request — returns a PROMISE that resolves after 1 sec
+  function fetchStepSize(): Promise<number> {
+    return new Promise((resolve) => {
+      const randomStep = Math.floor(Math.random() * 5) + 1; // 1–5
+      setTimeout(() => resolve(randomStep), 1000);
+    });
+  }
+
+  // ⭐ Fetch step size ONLY when auto becomes true
   useEffect(() => {
-    document.title = `Count: ${count}`;
-  }, [count]);
+    if (!auto) return;
 
-  // ⭐ Effect 2 — start/stop an interval when `auto` changes
-  useEffect(() => {
-    let interval: number | undefined;
+    let cancelled = false;
+    const thisFetchId = ++fetchIdRef.current;
 
-    if (auto) {
-      interval = window.setInterval(() => {
-        setCount((c) => c + 1);
-      }, 1000);
-    }
+    fetchStepSize().then((value) => {
+      // Ignore outdated fetches
+      if (cancelled) return;
+      if (thisFetchId !== fetchIdRef.current) return;
 
-    // Cleanup runs when `auto` becomes false or component unmounts
+      setStep(value);
+    });
+
     return () => {
-      if (interval) clearInterval(interval);
+      cancelled = true; // cancel fetch
     };
   }, [auto]);
+
+  // ⭐ Auto increment logic (runs whenever step or auto changes)
+  useEffect(() => {
+    if (!auto) return;
+
+    const interval = window.setInterval(() => {
+      setCount((c) => c + step);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [auto, step]);
+
+  // ⭐ Measure width on every count change — before DOM paints
+  useLayoutEffect(() => {
+    if (textRef.current) {
+      const width = textRef.current.getBoundingClientRect().width;
+      setTooWide(width > 300);
+    }
+  }, [count]);
+
+
+  // ⭐ Stop auto mode when width > 300px
+  useEffect(() => {
+    if (tooWide && auto) {
+      setAuto(false); // stop auto counter
+    }
+  }, [tooWide, auto]);
 
   return (
     <div style={{ marginTop: 20 }}>
       <h2>Counter</h2>
 
-      <p>Current count: {count}</p>
+      <p>
+        Current count: <span ref={textRef}>{count}</span>
+      </p>
 
       <button onClick={() => setCount((c) => c + 1)}>Increment</button>
       <button onClick={() => setCount((c) => c - 1)}>Decrement</button>
@@ -37,9 +79,15 @@ const Counter: React.FC = () => {
 
       <hr />
 
+      <p>Step size: {step}</p>
+
       <button onClick={() => setAuto((a) => !a)}>
         {auto ? "Stop Auto Count" : "Start Auto Count"}
       </button>
+
+      {tooWide && (
+        <p style={{ color: "red" }}>⚠ Counter too wide — auto stopped.</p>
+      )}
     </div>
   );
 };
