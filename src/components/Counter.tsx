@@ -4,21 +4,23 @@ const Counter: React.FC = () => {
   const [count, setCount] = useState(0);
   const [auto, setAuto] = useState(false);
 
-  const [step, setStep] = useState(1); // dynamic step size
-  const fetchIdRef = useRef(0); // helps prevent race conditions
-  const textRef = useRef<HTMLParagraphElement>(null);
+  const [step, setStep] = useState(1);
+  const fetchIdRef = useRef(0);
+
+  // Measure ONLY the number, not whole sentence
+  const textRef = useRef<HTMLSpanElement>(null);
 
   const [tooWide, setTooWide] = useState(false);
 
-  // ⭐ Simulated API request — returns a PROMISE that resolves after 1 sec
+  // ⭐ Fake API (1 second delay)
   function fetchStepSize(): Promise<number> {
     return new Promise((resolve) => {
-      const randomStep = Math.floor(Math.random() * 5) + 1; // 1–5
+      const randomStep = Math.floor(Math.random() * 5) + 1;
       setTimeout(() => resolve(randomStep), 1000);
     });
   }
 
-  // ⭐ Fetch step size ONLY when auto becomes true
+  // ⭐ Fetch step when auto turns ON
   useEffect(() => {
     if (!auto) return;
 
@@ -26,7 +28,6 @@ const Counter: React.FC = () => {
     const thisFetchId = ++fetchIdRef.current;
 
     fetchStepSize().then((value) => {
-      // Ignore outdated fetches
       if (cancelled) return;
       if (thisFetchId !== fetchIdRef.current) return;
 
@@ -34,11 +35,11 @@ const Counter: React.FC = () => {
     });
 
     return () => {
-      cancelled = true; // cancel fetch
+      cancelled = true;
     };
   }, [auto]);
 
-  // ⭐ Auto increment logic (runs whenever step or auto changes)
+  // ⭐ Auto increment using dynamic step
   useEffect(() => {
     if (!auto) return;
 
@@ -49,19 +50,18 @@ const Counter: React.FC = () => {
     return () => clearInterval(interval);
   }, [auto, step]);
 
-  // ⭐ Measure width on every count change — before DOM paints
+  // ⭐ Measure ONLY the number's width (correct!)
   useLayoutEffect(() => {
     if (textRef.current) {
       const width = textRef.current.getBoundingClientRect().width;
-      setTooWide(width > 300);
+      setTooWide(width > 20);
     }
   }, [count]);
 
-
-  // ⭐ Stop auto mode when width > 300px
+  // ⭐ Stop auto mode if number too wide
   useEffect(() => {
     if (tooWide && auto) {
-      setAuto(false); // stop auto counter
+      setAuto(false);
     }
   }, [tooWide, auto]);
 
