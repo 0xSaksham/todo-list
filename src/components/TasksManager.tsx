@@ -1,22 +1,20 @@
 import React, {
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-
-interface Task {
-  id: number;
-  text: string;
-  completed: boolean;
-}
+import { TodoContext } from "../providers/TodoContext";
 
 const TasksManager: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, text: "Finish hooks assignment", completed: false },
-    { id: 2, text: "Review React code", completed: true },
-  ]);
+  const {
+    todos: tasks,
+    addTodo,
+    removeTodo,
+    toggleTodo,
+  } = useContext(TodoContext);
 
   const [newTask, setNewTask] = useState("");
   const [search, setSearch] = useState("");
@@ -26,18 +24,16 @@ const TasksManager: React.FC = () => {
     inputRef.current?.focus();
   }, []);
 
-  const toggleTask = useCallback((id: number) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
-  }, []);
+  const toggleTask = useCallback(
+    (id: number) => {
+      toggleTodo(id);
+    },
+    [toggleTodo]
+  );
 
   const handleAdd = () => {
     if (!newTask.trim()) return;
-    setTasks((prev) => [
-      ...prev,
-      { id: Date.now(), text: newTask.trim(), completed: false },
-    ]);
+    addTodo(newTask.trim());
     setNewTask("");
     inputRef.current?.focus();
   };

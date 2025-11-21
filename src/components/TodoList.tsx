@@ -1,14 +1,12 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useContext } from "react";
 import { Todo } from "../types/Todo";
 import TodoItem from "./TodoItem";
+import { TodoContext } from "../providers/TodoContext";
 // @ts-ignore
 import "../styles/app.css";
 
 function TodoList() {
-  const [todos, setTodos] = useState<Todo[]>([
-    { id: 1, text: "Learn React", completed: false },
-    { id: 2, text: "Practice TypeScript", completed: false },
-  ]);
+  const { todos, addTodo, removeTodo, toggleTodo } = useContext(TodoContext);
 
   const [search, setSearch] = useState("");
   const [input, setInput] = useState("");
@@ -16,24 +14,8 @@ function TodoList() {
   // ⭐ Add new todo
   function handleAdd() {
     if (input.trim() === "") return;
-
-    setTodos((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        text: input.trim(),
-        completed: false,
-      },
-    ]);
-
+    addTodo(input.trim());
     setInput("");
-  }
-
-  // ⭐ Toggle completed
-  function toggleTodo(id: number) {
-    setTodos((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
   }
 
   // ⭐ useMemo → only recompute filtered todos when `todos` or `search` changes
