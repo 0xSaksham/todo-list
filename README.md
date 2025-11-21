@@ -10,7 +10,7 @@
 
 <div align="center">
   <a href="YOUR_DEPLOYMENT_LINK_HERE">
-    <img src="https://placehold.co/1200x600/1f2937/ffffff?text=Add+Your+App+Screenshot+Here" alt="App Screenshot" width="100%" />
+    <img src="./public/image.png" alt="App Screenshot" width="100%" />
   </a>
   <br />
 
@@ -62,7 +62,7 @@ Ensure you have [Node.js](https://nodejs.org/) installed.
     npm run dev
     ```
 
-The app should now be running at `http://localhost:5173` (or a similar port).
+The app should now be running at `http://localhost:3000` (or a similar port).
 
 ## 🛠️ Available Scripts
 
@@ -109,5 +109,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ***
 
 <div align="center">
-  <p>Built with ❤️ by <a href="https://github.com/your-username">Your Name</a></p>
+  <p>Built with ❤️ by <a href="https://github.com/0xsaksham">Saksham Gupta</a></p>
 </div>
