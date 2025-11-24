@@ -59,7 +59,7 @@ Ensure you have [Node.js](https://nodejs.org/) installed.
 
 3.  **Start the development server**
     ```bash
-    npm run dev
+    npm start
     ```
 
 The app should now be running at `http://localhost:3000` (or a similar port).
