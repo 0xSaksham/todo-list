@@ -1,7 +1,8 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
+import { useUser } from "../hooks/useUser";
 
 const Greeting: React.FC = () => {
-  const [name, setName] = useState("");
+  const { userName, updateUserName } = useUser();
   const inputRef = useRef<HTMLInputElement>(null);
 
   /**
@@ -15,24 +16,24 @@ const Greeting: React.FC = () => {
   }, []); // runs once on mount
 
   /**
-   * ⭐ Runs ONLY once — simulate restoring saved name
+   * ⭐ Runs ONLY once — simulate restoring saved name from localStorage
    */
   useEffect(() => {
     console.log("Greeting mounted");
 
     const savedName = localStorage.getItem("name");
-    if (savedName) setName(savedName);
+    if (savedName) updateUserName(savedName);
   }, []);
 
   /**
-   * ⭐ Runs whenever `name` changes
+   * ⭐ Runs whenever `userName` changes
    * Save the name to localStorage so it persists
    */
   useEffect(() => {
-    if (name.trim().length > 0) {
-      localStorage.setItem("name", name);
+    if (userName.trim().length > 0 && userName !== "Guest") {
+      localStorage.setItem("name", userName);
     }
-  }, [name]);
+  }, [userName]);
 
   return (
     <div>
@@ -41,11 +42,11 @@ const Greeting: React.FC = () => {
       <input
         ref={inputRef}
         placeholder="Enter your name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={userName === "Guest" ? "" : userName}
+        onChange={(e) => updateUserName(e.target.value || "Guest")}
       />
 
-      {name && <p>Hello, {name} 👋</p>}
+      {userName && userName !== "Guest" && <p>Hello, {userName} 👋</p>}
     </div>
   );
 };
