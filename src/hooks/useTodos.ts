@@ -28,7 +28,7 @@ export const useTodos = () => {
    */
   const addTodo = (text: string) => {
     const newTodo: Todo = {
-      id: Date.now(),
+      id: crypto.randomUUID(),
       text,
       completed: false,
     };
@@ -39,7 +39,7 @@ export const useTodos = () => {
    * Toggle a todo's completed state
    * @param id - The id of the todo to toggle
    */
-  const toggleTodo = (id: number) => {
+  const toggleTodo = (id: string) => {
     setTodos((prev) =>
       prev.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
@@ -51,7 +51,7 @@ export const useTodos = () => {
    * Delete a todo
    * @param id - The id of the todo to delete
    */
-  const deleteTodo = (id: number) => {
+  const deleteTodo = (id: string) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
 

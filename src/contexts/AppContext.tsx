@@ -26,8 +26,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [userName, setUserName] = useState<string>("Guest");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [todos, setTodos] = useState<Todo[]>([
-    { id: 1, text: "Learn React Context", completed: false },
-    { id: 2, text: "Build Custom Hooks", completed: false },
+    { id: crypto.randomUUID(), text: "Learn React Context", completed: false },
+    { id: crypto.randomUUID(), text: "Build Custom Hooks", completed: false },
   ]);
 
   const value: AppContextType = {

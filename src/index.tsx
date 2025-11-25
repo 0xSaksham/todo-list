@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App";
+import { AppRouter } from "./router/AppRouter";
 import { AppProvider } from "./contexts/AppContext";
 
 // @ts-ignore: allow side-effect CSS import without type declarations
@@ -10,7 +10,9 @@ const container = document.getElementById("root")!;
 const root = createRoot(container);
 
 root.render(
-  <AppProvider>
-    <App />
-  </AppProvider>
+  <React.StrictMode>
+    <AppProvider>
+      <AppRouter />
+    </AppProvider>
+  </React.StrictMode>
 );

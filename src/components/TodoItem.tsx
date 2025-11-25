@@ -3,8 +3,8 @@ import { Todo } from "../types/Todo";
 
 interface Props {
   todo: Todo;
-  onToggle: (id: number) => void;
-  onDelete: (id: number) => void;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
   theme: "light" | "dark";
 }
 

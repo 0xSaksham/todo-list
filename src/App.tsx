@@ -1,5 +1,6 @@
 import React from "react";
-import ProductivityDashboard from "./components/ProductivityDashboard";
+import { Outlet } from "react-router-dom";
+import Navbar from "./components/Navbar";
 import { useTheme } from "./hooks/useTheme";
 // @ts-ignore: allow side-effect CSS import without type declarations
 import "./styles/app.css";
@@ -14,6 +15,7 @@ const App: React.FC = () => {
         backgroundColor: theme === "dark" ? "#1a202c" : "#f7fbff",
         minHeight: "100vh",
         transition: "background-color 0.3s ease",
+        padding: "20px",
       }}
     >
       <header
@@ -27,7 +29,7 @@ const App: React.FC = () => {
         <h1
           style={{ color: theme === "dark" ? "#e2e8f0" : "#0f2540", margin: 0 }}
         >
-          Productivity Dashboard
+          Todo App
         </h1>
         <button
           onClick={toggleTheme}
@@ -45,7 +47,8 @@ const App: React.FC = () => {
           {theme === "dark" ? "🌞 Light Mode" : "🌙 Dark Mode"}
         </button>
       </header>
-      <ProductivityDashboard />
+      <Navbar />
+      <Outlet />
     </div>
   );
 };
